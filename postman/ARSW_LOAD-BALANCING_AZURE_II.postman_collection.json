@@ -1,0 +1,109 @@
+{
+  "info": {
+    "_postman_id": "9b1c3a52-5c1e-4a5f-9d33-0a6b7f2e4c11",
+    "name": "ARSW_LOAD-BALANCING_AZURE_II",
+    "description": "Colección de Newman para el Laboratorio 10. Cada request pega a una Azure Function del Function App. Para la prueba concurrente de 10 peticiones se lanzan 10 ejecuciones de newman en paralelo (ver run-concurrent.ps1 / run-concurrent.sh).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "fibonacci-iterativa",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Responde 200', function () { pm.response.to.have.status(200); });",
+              "pm.test('Devuelve un valor', function () { pm.expect(pm.response.text()).to.be.a('string').and.not.empty; });"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nth\": {{nth}}\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://{{functionApp}}.azurewebsites.net/api/Fibonacci",
+          "protocol": "https",
+          "host": [
+            "{{functionApp}}",
+            "azurewebsites",
+            "net"
+          ],
+          "path": [
+            "api",
+            "Fibonacci"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "fibonacci-memo",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Responde 200', function () { pm.response.to.have.status(200); });",
+              "pm.test('Devuelve el valor esperado', function () {",
+              "  var body = pm.response.json();",
+              "  pm.expect(body.value, 'value').to.be.a('string').and.not.empty;",
+              "  pm.expect(body.cacheEntries, 'cacheEntries').to.be.a('number');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nth\": {{nthMemo}}\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://{{functionApp}}.azurewebsites.net/api/fibonacci-memo",
+          "protocol": "https",
+          "host": [
+            "{{functionApp}}",
+            "azurewebsites",
+            "net"
+          ],
+          "path": [
+            "api",
+            "fibonacci-memo"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "protocolProfileBehavior": {}
+}
